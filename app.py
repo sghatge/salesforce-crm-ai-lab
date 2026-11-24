@@ -111,6 +111,30 @@ with tabs[1]:
     ],columns=["Parent / object","Related object","Relationship","Business meaning"])
     st.markdown("**Relationship map**")
     st.dataframe(relations,use_container_width=True,hide_index=True)
+
+    st.markdown("**Visual CRM relationship map**")
+    st.graphviz_chart("""
+    digraph objects {
+      rankdir=LR; graph [bgcolor="transparent",pad="0.2",nodesep="0.3",ranksep="0.5"];
+      node [shape=box,style="rounded,filled",fontname="Arial",fontsize=10,color="#7892b5",fillcolor="#edf4ff"];
+      edge [color="#64748b",arrowsize=0.75];
+      lead [label="Lead"];
+      account [label="Account",fillcolor="#dceafe",color="#3977c8"];
+      contact [label="Contact",fillcolor="#dceafe",color="#3977c8"];
+      opportunity [label="Opportunity",fillcolor="#dcf5e8",color="#29945b"];
+      case [label="Case",fillcolor="#ffe9d5",color="#c77b28"];
+      campaign [label="Campaign"];
+      member [label="Campaign Member"];
+      lead->account [label="convert"];
+      account->contact [label="1 : many"];
+      account->opportunity [label="1 : many"];
+      contact->case [label="1 : many"];
+      campaign->member [label="1 : many"];
+      member->lead [label="Lead"];
+      member->contact [label="Contact"];
+    }
+    """)
+
     st.info("The lab uses simplified synthetic tables. Salesforce standard objects, lookup/master-detail relationships and org customizations may differ.")
 
 with tabs[2]:
@@ -202,6 +226,15 @@ with tabs[6]:
     c.metric("Campaign members",int(campaigns.members.sum()))
     stage=opps.groupby("stage",as_index=False).agg(opportunities=("opportunity_id","count"),pipeline=("amount","sum"))
     st.markdown("**Opportunity pipeline by stage**"); st.bar_chart(stage.set_index("stage")["pipeline"])
+
+    st.markdown("**Lead qualification score components**")
+    lead_scores = st.session_state.leads.copy()
+    lead_scores["engagement contribution"] = lead_scores.engagement * 0.55
+    lead_scores["fit contribution"] = lead_scores.fit * 0.45
+    score_view = lead_scores.set_index("name")[["engagement contribution","fit contribution"]]
+    st.bar_chart(score_view)
+    st.caption("Illustrative score composition: 55% engagement + 45% fit. Weights are lab assumptions, not a Salesforce default.")
+
     st.dataframe(weighted[["opportunity_id","account","stage","amount","probability","weighted_value","days_open"]],use_container_width=True,hide_index=True)
     camp=campaigns.copy()
     camp["response_rate_pct"]=(camp.responded/camp.members*100).round(1)
