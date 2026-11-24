@@ -31,6 +31,9 @@ pytest
 python src/validate_crm_event.py data/crm-outcomes.jsonl
 ```
 
+## Shared lifecycle integration
+The lab includes an AJO Outcome Inbox with a synthetic follow-up task proposal. It shares `contracts/customer-lifecycle-event.json` and `contracts/salesforce-followup-action.json` with the AEP and AJO labs. Human approval is required; no CRM write is executed. See `docs/phase-5-ajo-outcome-inbox.md`.
+
 ## Security
 Use OAuth and least-privilege connected-app permissions in any real org. Never commit client secrets, refresh tokens, production data or personal customer data. Use synthetic records only. Human approval is required for consequential sales/service actions during the lab.
 
