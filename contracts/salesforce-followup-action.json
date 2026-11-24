@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Synthetic Salesforce Follow-up Action Request",
+  "type": "object",
+  "required": ["requestId","correlationId","customer","actionType","status","requiresHumanApproval"],
+  "properties": {
+    "requestId":{"type":"string","minLength":1},
+    "correlationId":{"type":"string","minLength":1},
+    "customer":{"type":"object","required":["crmId"],"properties":{"crmId":{"type":"string"},"recordType":{"enum":["Lead","Contact","Account"]}},"additionalProperties":false},
+    "actionType":{"enum":["CREATE_TASK","UPDATE_LEAD_STATUS","ADD_CAMPAIGN_MEMBER","CREATE_CASE_FOLLOWUP"]},
+    "subject":{"type":"string"},
+    "description":{"type":"string"},
+    "priority":{"enum":["Low","Normal","High"]},
+    "status":{"enum":["PROPOSED","PENDING_HUMAN_APPROVAL","APPROVED","REJECTED","CREATED"]},
+    "requiresHumanApproval":{"const":true},
+    "sourceJourney":{"type":"string"}
+  },
+  "additionalProperties":false
+}
