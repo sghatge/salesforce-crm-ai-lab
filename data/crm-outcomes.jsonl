@@ -1,0 +1,2 @@
+{"eventId":"OUT-001","profileKey":"CRM-1001","outcomeType":"cart_recovered","occurredAt":"2026-11-24T08:30:00+05:30","source":"AJO","correlationId":"CORR-001"}
+{"eventId":"OUT-002","profileKey":"CRM-1002","outcomeType":"consent_withdrawn","occurredAt":"2026-11-24T08:45:00+05:30","source":"AEP","correlationId":"CORR-002"}

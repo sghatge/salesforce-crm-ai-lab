@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Synthetic Engagement Outcome",
+  "type": "object",
+  "required": ["eventId", "profileKey", "outcomeType", "occurredAt", "source"],
+  "properties": {
+    "eventId": {"type": "string", "minLength": 1},
+    "profileKey": {"type": "string", "minLength": 1},
+    "outcomeType": {"enum": ["journey_entered", "message_clicked", "purchase", "cart_recovered", "consent_withdrawn"]},
+    "occurredAt": {"type": "string", "format": "date-time"},
+    "source": {"enum": ["AJO", "AEP", "WEB", "COMMERCE"]},
+    "correlationId": {"type": "string"},
+    "salesforceRecordId": {"type": "string"}
+  },
+  "additionalProperties": false
+}
