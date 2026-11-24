@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Synthetic Customer Lifecycle Event",
+  "type": "object",
+  "required": ["eventId", "correlationId", "occurredAt", "source", "eventType", "customer", "status"],
+  "properties": {
+    "eventId": {"type":"string","minLength":1},
+    "correlationId": {"type":"string","minLength":1},
+    "occurredAt": {"type":"string","format":"date-time"},
+    "source": {"enum":["AEP","AJO","SALESFORCE","INTEGRATION_SIMULATOR"]},
+    "eventType": {"enum":["audience_qualified","journey_entered","message_eligible","message_blocked","converted","journey_exited","crm_followup_requested","crm_task_created"]},
+    "customer": {
+      "type":"object",
+      "required":["crmId"],
+      "properties":{
+        "crmId":{"type":"string","minLength":1},
+        "ecid":{"type":["string","null"]},
+        "email":{"type":["string","null"],"format":"email"}
+      },
+      "additionalProperties":false
+    },
+    "journey": {
+      "type":"object",
+      "properties":{
+        "journeyId":{"type":"string"},
+        "journeyName":{"type":"string"},
+        "step":{"type":"string"},
+        "channel":{"enum":["EMAIL","SMS","PUSH","NONE"]}
+      },
+      "additionalProperties":false
+    },
+    "consent": {
+      "type":"object",
+      "properties":{
+        "email":{"enum":["GRANTED","DENIED","UNKNOWN"]},
+        "sms":{"enum":["GRANTED","DENIED","UNKNOWN"]}
+      },
+      "additionalProperties":false
+    },
+    "status":{"enum":["SIMULATED","ELIGIBLE","BLOCKED","CONVERTED","EXITED","PENDING_REVIEW","CREATED"]},
+    "reason":{"type":"string"},
+    "metrics":{
+      "type":"object",
+      "properties":{
+        "cartValue":{"type":"number","minimum":0},
+        "revenue":{"type":"number","minimum":0},
+        "currency":{"type":"string","pattern":"^[A-Z]{3}$"}
+      },
+      "additionalProperties":false
+    }
+  },
+  "additionalProperties":false
+}
