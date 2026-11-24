@@ -1,41 +1,40 @@
-# Salesforce CRM & AI Lab
+# Salesforce CRM Intelligence Lab
 
-Hands-on learning repository for Salesforce Sales Cloud, Service Cloud, CRM data modelling, REST integrations, Data Cloud (also referred to as Data 360 in current Salesforce positioning) and governed Agentforce patterns.
+An interactive, hands-on Salesforce CRM learning lab built with Streamlit and synthetic customer records.
 
-> Learning blueprint only. Uses synthetic data and local simulations; it does not connect to a Salesforce org or invoke Agentforce actions.
+> **Educational simulator only:** no Salesforce org, Data Cloud or Agentforce tenant is connected. The app does not write CRM records, create Tasks, send messages or execute agent actions.
 
-## Business outcome
-Create a clean CRM operating model, integrate customer and engagement signals from an external experience platform, and design AI-assisted sales/service workflows with explicit permissions and human review.
-
-## Core workstreams
-1. CRM data model: Lead, Contact, Account, Opportunity, Case, Task and Campaign Member.
-2. Data stewardship: record ownership, deduplication, field-level authority, consent and lifecycle state.
-3. Integration: authenticated REST API patterns, idempotency, retries, error handling and audit trail.
-4. Data Cloud: identity resolution, unified individual, calculated insights and activation concepts (subject to licensed features).
-5. Agentforce: topics/instructions, actions, grounding, access controls, guardrails and human handoff.
-6. Closed loop: AJO journey outcome → integration service → Salesforce Task/record update → sales/service outcome → approved feedback to AEP.
-
-## Repository map
-- `docs/` — architecture, data model, integration and agent safety
-- `contracts/` — platform-neutral CRM payloads
-- `data/` — synthetic records
-- `src/` — local validation and idempotency example
-- `tests/` — deterministic checks
-- `ROADMAP.md` — 8-week hands-on plan
+## Explore the lab
+- **CRM Data Model:** inspect synthetic Accounts, Contacts, Leads, Opportunities, Cases and Campaigns, plus relationship concepts.
+- **Customer 360:** view a consolidated synthetic contact, account, opportunity and service context.
+- **Lead Management:** calculate an illustrative lead score, apply qualification and duplicate checks, and create session-only sample Leads.
+- **Flow Simulator:** configure a record-triggered decision and evaluate it against a synthetic record.
+- **Service & Cases:** inspect case queues, priority and sample SLA risk.
+- **CRM Analytics:** explore opportunity pipeline, weighted pipeline and campaign response data; export CSV.
+- **Governance & AI:** run a governance checklist and evaluate consent plus human approval for a proposed AI action.
+- **AJO Integration:** preview and download a synthetic journey outcome and proposed Salesforce Task payload.
 
 ## Run locally
 ```bash
 python -m venv .venv
-pip install -e .[dev]
-pytest
-python src/validate_crm_event.py data/crm-outcomes.jsonl
+pip install -r requirements.txt
+streamlit run app.py
 ```
 
-## Shared lifecycle integration
-The lab includes an AJO Outcome Inbox with a synthetic follow-up task proposal. It shares `contracts/customer-lifecycle-event.json` and `contracts/salesforce-followup-action.json` with the AEP and AJO labs. Human approval is required; no CRM write is executed. See `docs/phase-5-ajo-outcome-inbox.md`.
+## Deploy for free
+Use Streamlit Community Cloud:
+- Repository: `sghatge/salesforce-crm-ai-lab`
+- Branch: `main`
+- Main file: `app.py`
 
-## Security
-Use OAuth and least-privilege connected-app permissions in any real org. Never commit client secrets, refresh tokens, production data or personal customer data. Use synthetic records only. Human approval is required for consequential sales/service actions during the lab.
+No Vercel, paid hosting or hosted database is required.
 
-## Source material
-Based on the user's Google Drive consolidated Adobe/AEP/AJO/Salesforce guide and MarTech 2030 architecture notes. Validate current product naming, availability and licensing in Salesforce Help and the target org.
+## Learning boundaries
+- Records and analytics are synthetic and reset with the app session.
+- Lead scoring weights, thresholds and SLA rules are illustrative.
+- Flow and AI actions are simulations only.
+- Real integrations require a Salesforce org, OAuth, least-privilege permissions, field ownership, idempotency, error handling, security review and formal approval.
+- Validate product features, licensing and org-specific configuration against current Salesforce documentation and your target org.
+
+## Portfolio outcome
+Demonstrates CRM data modelling, customer context, lead qualification, Flow logic, service operations, pipeline analytics, consent controls, AI governance and a closed-loop AJO-to-Salesforce integration pattern.
