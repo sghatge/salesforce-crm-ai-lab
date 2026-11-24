@@ -11,7 +11,7 @@ seed=[
 {"record_id":"L-2003","name":"Mira Iyer","type":"Lead","source":"Partner","score":61,"status":"Working","email_opt_out":False,"sms_opt_in":True,"owner":"Inside Sales"}]
 if "crm" not in st.session_state: st.session_state.crm=pd.DataFrame(seed)
 a,b,c=st.columns(3); a.metric("CRM records",len(st.session_state.crm)); b.metric("Leads",int((st.session_state.crm.type=="Lead").sum())); c.metric("Contacts",int((st.session_state.crm.type=="Contact").sum()))
-t1,t2,t3,t4=st.tabs(["CRM explorer","Lead qualification","Agent action gate","Field ownership"])
+t1,t2,t3,t4,t5=st.tabs(["CRM explorer","Lead qualification","Agent action gate","Field ownership","AJO outcome inbox"])
 with t1:
  st.dataframe(st.session_state.crm,use_container_width=True,hide_index=True)
  with st.expander("Create a synthetic lead"):
@@ -57,6 +57,25 @@ with t4:
  ["Journey outcome","AEP dataset; CRM summary","AJO/AEP → Salesforce","Closed-loop action"]],columns=["Data domain","System of record","Typical flow","Reason"])
  st.dataframe(matrix,use_container_width=True,hide_index=True)
  st.warning("Avoid competing owners for the same field. Define authoritative source, sync direction, conflict rule and steward.")
+
+with t5:
+ st.subheader("AJO outcome inbox → Salesforce follow-up")
+ st.caption("Simulated inbound journey outcome. CRM writes remain disabled; approval is explicit and local to this session.")
+ if "journey_inbox" not in st.session_state:
+  st.session_state.journey_inbox={"correlationId":"CORR-C-1001-AJO-001","crmId":"C-1001","journey":"Abandoned cart recovery","outcome":"message_blocked","reason":"SMS consent not granted","status":"RECEIVED"}
+ inbox=st.session_state.journey_inbox
+ st.json(inbox)
+ st.markdown("**Proposed CRM task**")
+ task={"requestId":"SF-"+inbox["correlationId"],"correlationId":inbox["correlationId"],"customer":{"crmId":inbox["crmId"],"recordType":"Contact"},"actionType":"CREATE_TASK","subject":"Review AJO journey outcome","description":inbox["reason"],"priority":"Normal","status":"PENDING_HUMAN_APPROVAL","requiresHumanApproval":True,"sourceJourney":inbox["journey"]}
+ st.json(task)
+ approved=st.checkbox("I approve this synthetic task proposal for demonstration")
+ if st.button("Evaluate task proposal"):
+  if approved:
+   st.success("SIMULATION APPROVED — task payload is ready for controlled integration. No Salesforce write occurred.")
+  else:
+   st.warning("Approval not provided. Proposal remains PENDING_HUMAN_APPROVAL.")
+ st.info("Production integration must validate the shared contract, CRM identity, deduplication key, permissions and approval policy.")
+
 with st.expander("Closed-loop integration pattern"):
  st.markdown("1. Salesforce Lead/Contact/Consent syncs to AEP.\n2. AEP resolves CRM ID, email and ECID and enriches profiles with behavioral events.\n3. AJO evaluates event, audience, consent and fatigue before a journey action.\n4. Outcomes return through AEP and an approved integration to Salesforce Task, Opportunity, Case or Campaign Member.\n5. A policy gate validates agent proposals and records approvals, rejections and audit evidence.")
 st.caption("Source alignment: Consolidated Adobe/AEP/AJO/Salesforce Guide and MarTech 2030 Governed AI Agent Architecture. Synthetic records only.")
